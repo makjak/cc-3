@@ -46,6 +46,5 @@ while true do
    try_refuel()
    move_to_corner()
    turtle.turnRight()
-
-
+   break
 end
