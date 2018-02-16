@@ -49,7 +49,7 @@ function move_to_center()
    turtle.turnLeft()
    turtle.turnLeft()
    -- the distances are the same as center -> top-right
-   mode_to_corner()
+   move_to_corner()
 end
 
 -- farm one tile.
@@ -110,8 +110,6 @@ end
 
 -- main loop
 while true do
-   do break end
-
    -- refuel and move to corner.
    try_refuel()
    move_to_corner()
