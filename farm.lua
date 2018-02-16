@@ -23,6 +23,15 @@ function try_refuel()
    end
 end
 
+-- unload the harvested crops
+function unload_crops()
+   -- for all but the first inventory slot
+   for i = 2, 16 do
+      turtle.select(i)
+      turtle.drop()
+   end
+end
+
 -- move from center to forward/right corner.
 function move_to_corner()
    for i = 1, 4 do
@@ -66,6 +75,11 @@ function farm_strip(strip_number)
    end
 
    -- determine direction to turn
+   if strip_number == 9 then -- last strip, we don't want to move over
+      unload_crops()
+      return
+   end
+   
    if strip_number % 2 == 1 then
       turtle.turnRight()
       turtle.forward()
@@ -79,12 +93,13 @@ end
 
 -- main loop
 while true do
-   -- wait 10 minutes between harvests.
+   do break end
 
    -- refuel and move to corner.
    try_refuel()
    move_to_corner()
    turtle.turnRight()
-   break
+
+   -- wait 10 minutes between harvests.
    os.sleep(600)
 end
