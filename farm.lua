@@ -1,5 +1,19 @@
+-- Primitive Farming Turtle.
+-- Farms a standard 9x9 crop farm with water
+-- in the center. It is only suited for early-
+-- game play, because it is quite crude.
+--   For one, potatoes are hard-coded, so it
+-- is necessary to edit the code to harvest
+-- other crops. I won't make this version
+-- good, because lategame i want something more
+-- sophisticated anyways.
 
--- refuel routine.
+-- Refuel routine.
+-- Attempts to grab 8 fuel from a chest above it.
+-- Slot 16 should be free, since this function is
+-- only called at the bginning of a route, after
+-- the turtle has, hypothetically, dropped its crops
+-- in a chest.
 function try_refuel()
    if turtle.getFuelLevel() < 512 then
       turtle.select(16)
@@ -33,18 +47,44 @@ function farm_tile()
    end
 end
 
-function farm_strip()
-   return
+-- farm an entire strip.
+-- the argument is the strip number, ( the first
+-- strip harvested is 1, the next is 2 etc...).
+--   The strip number is used to determine whether
+-- the turtle should turn left or right after a
+-- strip.
+function farm_strip(strip_number)
+   -- PRECONDITION: Hovering directly above the
+   -- fist tile of the strip, FACING FORWARD, i.e.
+   -- the direction the turtle needs to move to
+   -- harvest the strip.
+
+   farm_tile()
+   for i = 1, 8 do
+      turtle.forward()
+      farm_tile()
+   end
+
+   -- determine direction to turn
+   if strip_number % 2 == 1 then
+      turtle.turnRight()
+      turtle.forward()
+      turtle.turnRight()
+   else
+      turtle.turnLeft()
+      turtle.forward()
+      turtle.turnLeft()
+   end
 end
 
 -- main loop
 while true do
    -- wait 10 minutes between harvests.
-   os.sleep(600)
 
    -- refuel and move to corner.
    try_refuel()
    move_to_corner()
    turtle.turnRight()
    break
+   os.sleep(600)
 end
