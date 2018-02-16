@@ -30,9 +30,10 @@ function unload_crops()
       turtle.select(i)
       turtle.drop()
    end
+   turtle.select(1)
 end
 
--- move from center to forward/right corner.
+-- move from center to "top"-right corner.
 function move_to_corner()
    for i = 1, 4 do
       turtle.forward()
@@ -41,6 +42,14 @@ function move_to_corner()
    for i = 1, 4 do
       turtle.forward()
    end
+end
+
+-- move from the "bottom"-left corner to the middle
+function move_to_center()
+   turtle.turnLeft()
+   turtle.turnLeft()
+   -- the distances are the same as center -> top-right
+   mode_to_corner()
 end
 
 -- farm one tile.
@@ -75,8 +84,8 @@ function farm_strip(strip_number)
    end
 
    -- determine direction to turn
-   if strip_number == 9 then -- last strip, we don't want to move over
-      unload_crops()
+   if strip_number == 9 then
+      -- last strip, we don't want to move over.
       return
    end
    
@@ -91,6 +100,14 @@ function farm_strip(strip_number)
    end
 end
 
+-- farm en entire field.
+function farm_field()
+   -- PRECONDITION: Positioned in TOP-RIGHT corner.
+   for i = 1, 9 do
+      farm_strip(i)
+   end
+end
+
 -- main loop
 while true do
    do break end
@@ -99,6 +116,14 @@ while true do
    try_refuel()
    move_to_corner()
    turtle.turnRight()
+
+   -- farm the field and put crops in chest
+   farm_field()
+   unload_crops()
+
+   -- return to start position
+   move_to_center()
+   turtle.turnLeft()
 
    -- wait 10 minutes between harvests.
    os.sleep(600)
