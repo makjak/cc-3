@@ -1,3 +1,4 @@
-file = "raw.githubusercontent.com/steffenhaug/cc/master/" .. arg[1]
+args = {...}
+file = "raw.githubusercontent.com/steffenhaug/cc/master/" .. args[1]
 
-shell.run("wget " .. file .. " " .. arg[1])
+shell.run("wget " .. file .. " " .. args[1])
