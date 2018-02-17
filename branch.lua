@@ -179,7 +179,7 @@ while true do
    -- break the loop if there is no chest to dump
    -- our shit in when we are done
    local succ, data = turtle.inspectDown()
-   if data.name != "minecraft:chest" then
+   if data.name ~= "minecraft:chest" then
       break
    end
 
@@ -203,4 +203,6 @@ while true do
 
    -- bvreak the loop if we hit a wall between branches
    if not succ then break end
+
+   branch_number = branch_number + 1
 end
