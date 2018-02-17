@@ -167,7 +167,40 @@ function dump_down()
       turtle.select(i)
       turtle.dropDown()
    end
-   turtle.select(1)
 end
 
-mine_branch(depth)
+
+-- the modulo of the branch number
+-- determines the height of the branch
+local branch_number = 1
+
+-- main loop
+while true do
+   -- break the loop if there is no chest to dump
+   -- our shit in when we are done
+   local succ, data = turtle.inspectDown()
+   if data.name != "minecraft:chest" then
+      break
+   end
+
+   if branch_number % 2 == 1 then
+      turtle.up()
+   end
+
+   mine_branch(depth)
+   
+   if branch_number % 2 == 1 then
+      turtle.down()
+   end
+
+   dump_down()
+
+   local succ = true
+   turtle.turnLeft()
+   succ = turtle.forward()
+   succ = turtle.forward()
+   turtle.turnLeft()
+
+   -- bvreak the loop if we hit a wall between branches
+   if not succ then break end
+end
