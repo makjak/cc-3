@@ -34,24 +34,43 @@ function dig_down_persistently()
    while turtle.dig() do end
 end
 
--- move one step forward, to the
--- next "node" in the "ore tree"
-function branch_step()
+function branch_step_forward()
    dig_persistently()
    turtle.forward()
-   -- attemt to branch forward, left and right
-   -- TODO: branch up and down as well
-   branch_forward()
-   branch_left()
-   branch_right()
+   branch()
    turtle.back()
 end
 
+function branch_step_up()
+   dig_up_persistently()
+   turtle.up()
+   branch()
+   turtle.down()
+end
+
+function branch_step_down()
+   dig_down_persistently()
+   turtle.down()
+   branch()
+   turtle.up()
+end
+
+-- Core --
+-- these functions comprise the core
+-- of the algorithm. The strategy is
+-- simple:
+--
+--   for every direction:
+--     if the block in front is valuable:
+--       break the block.
+--       move in the direction.
+--       call the algorithm. (Recursive step!)
+--       move back.
 
 function branch_forward()
    local succ, data = turtle.inspect()
    if is_valuable(data.name) then
-      branch_step()
+      branch_step_forward()
    end
 end
 
@@ -59,7 +78,7 @@ function branch_left()
    turtle.turnLeft()
    local succ, data = turtle.inspect()
    if is_valuable(data.name) then
-      branch_step()
+      branch_step_forward()
    end
    turtle.turnRight()
 end
@@ -68,18 +87,58 @@ function branch_right()
    turtle.turnRight()
    local succ, data = turtle.inspect()
    if is_valuable(data.name) then
-      branch_step()
+      branch_step_forward()
    end
    turtle.turnLeft()
 end
 
+function branch_up()
+   local succ, data = turtle.inspectUp()
+   if is_valuable(data.name) then
+      branch_step_up()
+   end
+end
+
+function branch_down()
+   local succ, data = turtle.inspectDown()
+   if is_valuable(data.name) then
+      branch_step_down()
+   end
+end
+
+-- try to branch in all directions
+function branch()
+   branch_forward()
+   branch_up()
+   branch_down()
+   branch_left()
+   branch_right()
+end
 
 -- mine one branch
 function mine_branch(length)
+   -- dig a branch with the given length,
+   -- and, for each step, call the
+   -- recursive algorithm
    for i = 1, length do
       dig_persistently()
       turtle.forward()
+      -- run the algorithm, minus forward,
+      -- because we will move forward next
+      -- iteration anyways.
+      branch_up()
+      branch_down()
       branch_left()
       branch_right()
+   end
+   -- turn around
+   turtle.turnLeft()
+   turtle.turnLeft()
+   -- dig back (this is in case something
+   -- stupid has happened, like someone
+   -- placing a block in the way or whatever)
+   for i = 1, length do
+      dig_persistently()
+      turtle.forward()
    end
 end
