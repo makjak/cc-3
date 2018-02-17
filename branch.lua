@@ -161,4 +161,13 @@ function mine_branch(length)
    end
 end
 
+-- dumps the entire inventory in a chest below the robot.
+function dump_down()
+   for i = 1, 16 do
+      turtle.select(i)
+      turtle.dropDown()
+   end
+   turtle.select(1)
+end
+
 mine_branch(depth)
