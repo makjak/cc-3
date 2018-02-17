@@ -1,8 +1,16 @@
 -- branch mining
 
 function is_valuable(blockname)
-   -- determine whether a block is valuable
-   return false
+   if blockname == "minecraft:iron_ore" or
+      blockname == "minecraft:coal_ore" or
+      blockname == "minecraft:gold_ore" or
+      blockname == "minecraft:redstone_ore" or
+      blockname == "minecraft:diamond_ore"
+   then
+      return true
+   else 
+      return false
+   end
 end
 
 function branch_step()
