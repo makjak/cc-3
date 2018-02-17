@@ -2,7 +2,7 @@
 
 
 -- CONFIG --
-local depth = 16
+local depth = 10
 
 function is_valuable(blockname)
    if blockname == "minecraft:iron_ore" or
@@ -31,7 +31,7 @@ function dig_up_persistently()
 end
 
 function dig_down_persistently()
-   while turtle.dig() do end
+   while turtle.digDown() do end
 end
 
 function branch_step_forward()
@@ -44,14 +44,14 @@ end
 function branch_step_up()
    dig_up_persistently()
    turtle.up()
-   branch()
+   branch_after_plane_change()
    turtle.down()
 end
 
 function branch_step_down()
    dig_down_persistently()
    turtle.down()
-   branch()
+   branch_after_plane_change()
    turtle.up()
 end
 
@@ -72,6 +72,17 @@ function branch_forward()
    if is_valuable(data.name) then
       branch_step_forward()
    end
+end
+
+function branch_back()
+   turtle.turnLeft()
+   turtle.turnLeft()
+   local succ, data = turtle.inspect()
+   if is_valuable(data.name) then
+      branch_step_forward()
+   end
+   turtle.turnRight()
+   turtle.turnRight()
 end
 
 function branch_left()
@@ -113,6 +124,13 @@ function branch()
    branch_down()
    branch_left()
    branch_right()
+end
+
+-- after moving up or down, it is nexessary
+-- to branch backwards as well.
+function branch_after_plane_change()
+   branch()
+   branch_back()
 end
 
 -- mine one branch
