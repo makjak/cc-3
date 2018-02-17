@@ -160,3 +160,5 @@ function mine_branch(length)
       turtle.forward()
    end
 end
+
+mine_branch(depth)
