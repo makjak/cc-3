@@ -8,6 +8,8 @@ function is_valuable(blockname)
    if blockname == "minecraft:iron_ore" or
       blockname == "minecraft:coal_ore" or
       blockname == "minecraft:gold_ore" or
+      blockname == "minecraft:lapis_ore" or
+      blockname == "minecraft:emerald_ore" or
       blockname == "minecraft:redstone_ore" or
       blockname == "minecraft:diamond_ore"
    then
