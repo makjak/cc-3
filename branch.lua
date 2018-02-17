@@ -1,5 +1,9 @@
 -- branch mining
 
+
+-- CONFIG --
+local depth = 16
+
 function is_valuable(blockname)
    if blockname == "minecraft:iron_ore" or
       blockname == "minecraft:coal_ore" or
@@ -13,14 +17,36 @@ function is_valuable(blockname)
    end
 end
 
+
+-- dig functions that deals with gravel dy
+-- repeatedly calling turtle.dig() and friends
+-- until it returns false.
+
+function dig_persistently()
+   while turtle.dig() do end
+end
+
+function dig_up_persistently()
+   while turtle.digUp() do end
+end
+
+function dig_down_persistently()
+   while turtle.dig() do end
+end
+
+-- move one step forward, to the
+-- next "node" in the "ore tree"
 function branch_step()
-   turtle.dig()
+   dig_persistently()
    turtle.forward()
+   -- attemt to branch forward, left and right
+   -- TODO: branch up and down as well
    branch_forward()
    branch_left()
    branch_right()
    turtle.back()
 end
+
 
 function branch_forward()
    local succ, data = turtle.inspect()
@@ -47,10 +73,13 @@ function branch_right()
    turtle.turnLeft()
 end
 
--- main loop
-while true do
-   turtle.dig()
-   turtle.forward()
-   branch_left()
-   branch_right()
+
+-- mine one branch
+function mine_branch(length)
+   for i = 1, length do
+      dig_persistently()
+      turtle.forward()
+      branch_left()
+      branch_right()
+   end
 end
